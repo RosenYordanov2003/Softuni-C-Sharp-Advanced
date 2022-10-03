@@ -1,73 +1,91 @@
-﻿using System;
-using System.Linq;
+﻿using CarManufacture;
+using System;
 using System.Collections.Generic;
 
-namespace Special_Cars
+namespace CarManufacturer
 {
-    public class Program
+    public class StartUp
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            List<List<int>> years = new List<List<int>>();
-            List<List<double>> pressure = new List<List<double>>();
             string firstCommand = string.Empty;
-            Tires tires = new Tires();
+            List<Tires[]> list = new List<Tires[]>();
             while ((firstCommand = Console.ReadLine()) != "No more tires")
             {
                 string[] tokens = firstCommand.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                List<int> yearsList = tires.GetYears(tokens);
-                years.Add(yearsList);
-                List<double> currentPressure = tires.GetPressure(tokens);
-                pressure.Add(currentPressure);
+                int firstYear = int.Parse(tokens[0]);
+                double firstPressure = double.Parse(tokens[1]);
+                int secondYear = int.Parse(tokens[2]);
+                double secondPressure = double.Parse(tokens[3]);
+                int thirdYear = int.Parse(tokens[4]);
+                double thirdPressure = double.Parse(tokens[5]);
+                int fourthYear = int.Parse(tokens[6]);
+                double fourthPressure = double.Parse(tokens[7]);
+                Tires[] tireArray = new Tires[4]
+                {
+                    new Tires(firstYear,secondPressure),
+                    new Tires(secondYear,firstPressure),
+                    new Tires(thirdYear,thirdPressure),
+                    new Tires(fourthYear,fourthPressure),
+                };
+                list.Add(tireArray);
             }
             string secondCommand = string.Empty;
-            Engine engine = new Engine();
-            List<List<int>> horsePower = new List<List<int>>();
-            List<List<double>> cubicCapacity = new List<List<double>>();
+            List<Engine[]> engineList = new List<Engine[]>();
             while ((secondCommand = Console.ReadLine()) != "Engines done")
             {
                 string[] tokens = secondCommand.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                List<int> currentHorsePower = engine.GetHorsePower(tokens);
-                horsePower.Add(currentHorsePower);
-                List<double> currentCubicCapacity = engine.GetCubicCapacity(tokens);
-                cubicCapacity.Add(currentCubicCapacity);
+                int horsePower = int.Parse(tokens[0]);
+                double cubicCapacity = double.Parse(tokens[1]);
+                Engine[] engineArray = new Engine[1]
+                {
+                    new Engine(horsePower, cubicCapacity),
+                };
+                engineList.Add(engineArray);
             }
             string finalCommand = string.Empty;
-            List<Car> cars = new List<Car>();
+            List<Car> carList = new List<Car>();
             while ((finalCommand = Console.ReadLine()) != "Show special")
             {
                 string[] tokens = finalCommand.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                string make = tokens[0];
-                string model = tokens[1];
-                int year = int.Parse(tokens[2]);
-                double fuelQuantity = double.Parse(tokens[3]);
-                double fuelConsumption = double.Parse(tokens[4]);
-                int engineIndex = int.Parse(tokens[5]);
-                int tiresIndex = int.Parse(tokens[6]);
-                Car currentCar = new Car(make, model, year, fuelQuantity, fuelConsumption, engineIndex, tiresIndex);
-                cars.Add(currentCar);
+                Car car = new Car(tokens[0], tokens[1], int.Parse(tokens[2]), double.Parse(tokens[3]), double.Parse(tokens[4]), int.Parse(tokens[5]), int.Parse(tokens[6]));
+                carList.Add(car);
             }
-            GetSpecialCars(cars, horsePower, cubicCapacity, years, pressure);
+            PrintResult(carList, list, engineList);
         }
 
-        static void GetSpecialCars(List<Car> cars, List<List<int>> horsePower, List<List<double>> cubicCapacity, List<List<int>> years, List<List<double>> pressure)
+        static void PrintResult(List<Car> carList, List<Tires[]> list, List<Engine[]> engineList)
         {
-            List<Car> specialCars = new List<Car>();
-            foreach (Car specialCar in cars)
+            foreach (Car specialCar in carList)
             {
-                var currentCarHorsePower = horsePower[specialCar.EngineIndex].Sum();
-                var currentCarTierSum = pressure[specialCar.TiresIndex].Sum();
-                if (specialCar.Year >= 2017 && currentCarHorsePower > 330 && currentCarTierSum >= 9 && currentCarTierSum <= 10)
+                Engine[] engineProp = engineList[specialCar.EngineIndex];
+                int horsePower = 0;
+                double cubicCapacity = 0;
+                horsePower = engineProp[0].HorsePower;
+                cubicCapacity = engineProp[0].CubicCapacity;
+                Engine Engine = new Engine(horsePower, cubicCapacity);
+                Tires[] currentTiresArray = list[specialCar.TiresIndex];
+                double currentPressureSum = GetSum(currentTiresArray);
+                if (specialCar.Year >= 2017 && horsePower > 330 && (currentPressureSum > 9 && currentPressureSum < 10))
                 {
-                    specialCar.FuelQuantity = specialCar.Drive(specialCar.FuelQuantity, specialCar.FuelConsumption);
+                    specialCar.FuelQuantity = specialCar.Drive20Kilometers(specialCar.FuelQuantity, specialCar.FuelConsumption);
                     Console.WriteLine($"Make: {specialCar.Make}");
                     Console.WriteLine($"Model: {specialCar.Model}");
                     Console.WriteLine($"Year: {specialCar.Year}");
-                    Console.WriteLine($"HorsePowers: {currentCarHorsePower}");
+                    Console.WriteLine($"HorsePowers: {horsePower}");
                     Console.WriteLine($"FuelQuantity: {specialCar.FuelQuantity}");
                 }
             }
         }
+
+        static double GetSum(Tires[] currentTiresArray)
+        {
+            double sum = 0;
+            for (int i = 0; i < currentTiresArray.Length; i++)
+            {
+                sum += currentTiresArray[i].Pressure;
+            }
+            return sum;
+        }
     }
 }
-

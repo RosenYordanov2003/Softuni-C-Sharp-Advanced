@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Special_Cars
+﻿using CarManufacture;
+using System;
+namespace CarManufacturer
 {
     public class Car
     {
@@ -13,41 +11,6 @@ namespace Special_Cars
         private double fuelConsumption;
         private int engineIndex;
         private int tiresIndex;
-        public string Make
-        {
-            get { return this.make; }
-            set { this.make = value; }
-        }
-        public string Model
-        {
-            get { return this.model; }
-            set { this.model = value; }
-        }
-        public int Year
-        {
-            get { return this.year; }
-            set { this.year = value; }
-        }
-        public double FuelQuantity
-        {
-            get { return this.fuelQuantity; }
-            set { this.fuelQuantity = value; }
-        }
-        public double FuelConsumption
-        {
-            get { return this.fuelConsumption; }
-            set { this.fuelConsumption = value; }
-        }
-        public int EngineIndex
-        {
-            get { return this.engineIndex; }
-            set { this.engineIndex = value; }
-        }
-        public int TiresIndex
-        {
-            get { return this.tiresIndex; }
-            set { this.engineIndex = value; }
-        }
         public Car(string make, string model, int year, double fuelQuantity, double fuelConsumption, int engineIndex, int tiresIndex)
         {
             this.Make = make;
@@ -58,9 +21,61 @@ namespace Special_Cars
             this.EngineIndex = engineIndex;
             this.TiresIndex = tiresIndex;
         }
-        public double Drive(double fuelQuantity, double fuelConsumption)
+     
+        public string Make
         {
-            fuelQuantity -= (fuelConsumption / 100) * 20;
+            get { return this.make; }
+            set { this.make = value; }
+        }
+
+        public string Model
+        {
+            get { return this.model; }
+            set { this.model = value; }
+        }
+
+        public int Year
+        {
+            get { return this.year; }
+            set { this.year = value; }
+        }
+
+        public int HorsePower
+        {
+            get { return this.year; }
+            set { this.year = value; }
+        }
+
+        public double FuelQuantity
+        {
+            get { return this.fuelQuantity; }
+            set { this.fuelQuantity = value; }
+        }
+
+        public double FuelConsumption
+        {
+            get { return this.fuelConsumption; }
+            set { this.fuelConsumption = value; }
+        }
+        public int EngineIndex
+        {
+            get { return this.engineIndex; }
+            set { this.engineIndex = value; }
+        }
+
+        public int TiresIndex
+        {
+            get { return this.tiresIndex; }
+            set { this.tiresIndex = value; }
+        }
+
+        public double TotalPressure { get; set; }
+
+
+        public double Drive20Kilometers(double fuelQuantity, double fuelConsumption)
+        {
+            fuelQuantity -= (FuelConsumption / 100) * 20;
+
             return fuelQuantity;
         }
     }
