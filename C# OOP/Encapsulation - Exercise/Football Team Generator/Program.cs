@@ -2,81 +2,102 @@
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace FootballTeamGenerator
 {
     public class Program
     {
+        private static List<Team> teamList;
         static void Main(string[] args)
         {
-            List<Team> teams = new List<Team>();
-            string command;
+            teamList = new List<Team>();
+            string command = string.Empty;
             while ((command = Console.ReadLine()) != "END")
             {
                 try
                 {
-                    string[] tokens = command.Split(';', StringSplitOptions.RemoveEmptyEntries);
+                    string[] tokens = command.Split(';');
                     string action = tokens[0];
                     if (action == "Team")
                     {
                         string teamName = tokens[1];
-                        Team team = new Team(teamName);
-                        teams.Add(team);
+                        AddTeam(teamName);
                     }
                     else if (action == "Add")
                     {
-                        string teamToFind = tokens[1];
-                        string playerName = tokens[2];
-                        int endurace = int.Parse(tokens[3]);
-                        int sprint = int.Parse(tokens[4]);
-                        int dribble = int.Parse(tokens[5]);
-                        int passing = int.Parse(tokens[6]);
-                        int shooting = int.Parse(tokens[7]);
-                        Team teamToAddPlayer = teams.FirstOrDefault(t => t.Name == teamToFind);
+                        string team = tokens[1];
+                        Team teamToAddPlayer = teamList.FirstOrDefault(t => t.TeamName == team);
                         if (teamToAddPlayer != null)
                         {
-                            Player player = new Player(playerName, endurace, sprint, dribble, passing, shooting);
-                            teamToAddPlayer.AddPlayer(player);
+                            Player newPlayer = CreateNewPlayer(tokens);
+                            teamToAddPlayer.AddPlayer(newPlayer);
                         }
                         else
                         {
-                            Console.WriteLine($"Team {teamToFind} does not exist.");
+                            throw new InvalidOperationException(string.Format(ExceptionMessages.NotExistingTeam, team));
                         }
                     }
                     else if (action == "Remove")
                     {
-                        string teamToFind = tokens[1];
-                        string playerName = tokens[2];
-                        Team teamToRemovePlayer = teams.FirstOrDefault(t => t.Name == teamToFind);
-                        if (teamToRemovePlayer != null)
-                        {
-                            teamToRemovePlayer.Remove(playerName);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Team {teamToFind} does not exist.");
-                        }
+                        RemovePlayer(tokens);
                     }
                     else if (action == "Rating")
                     {
-                        string teamToShowRating = tokens[1];
-                        Team team = teams.FirstOrDefault(x => x.Name == teamToShowRating);
-                        if (team != null)
-                        {
-                            Console.WriteLine($"{team.Name} - {team.Rating}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Team {teamToShowRating} does not exist.");
-                        }
+                        string teamName = tokens[1];
+                        ShowRating(teamName);
                     }
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    Console.WriteLine(exception.Message);
+                    Console.WriteLine(e.Message);
                 }
 
             }
+        }
+
+        static void ShowRating(string teamName)
+        {
+            Team teamToShowRating = teamList.FirstOrDefault(t => t.TeamName == teamName);
+            if (teamToShowRating!=null)
+            {
+                Console.WriteLine(teamToShowRating);
+            }
+            else
+            {
+                throw new InvalidOperationException(string.Format(ExceptionMessages.NotExistingTeam, teamName));
+            }
+        }
+
+        static void RemovePlayer(string[] tokens)
+        {
+            string teamName = tokens[1];
+            Team teamToSearch = teamList.FirstOrDefault(t => t.TeamName == teamName);
+            if (teamToSearch != null)
+            {
+                string playerName = tokens[2];
+                teamToSearch.RemovePlayer(playerName);
+            }
+            else
+            {
+                throw new InvalidOperationException(string.Format(ExceptionMessages.NotExistingTeam, teamName));
+            }
+        }
+
+        static Player CreateNewPlayer(string[] tokens)
+        {
+            string playerName = tokens[2];
+            int endurace = int.Parse(tokens[3]);
+            int sprint = int.Parse(tokens[4]);
+            int dribble = int.Parse(tokens[5]);
+            int passing = int.Parse(tokens[6]);
+            int shooting = int.Parse(tokens[7]);
+            Player player = new Player(playerName, endurace, sprint, dribble, passing, shooting);
+            return player;
+        }
+
+        static void AddTeam(string teamName)
+        {
+            Team team = new Team(teamName);
+            teamList.Add(team);
         }
     }
 }
