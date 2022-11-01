@@ -9,81 +9,48 @@ namespace Animals
         static void Main(string[] args)
         {
             string typeAnimal;
+            List<Animal> animals = new List<Animal>();
             while ((typeAnimal = Console.ReadLine()) != "Beast!")
             {
                 string[] tokens = Console.ReadLine().Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 string name = tokens[0];
                 int age = int.Parse(tokens[1]);
-                if (typeAnimal=="Cat")
+                try
                 {
-                    try
+                    if (typeAnimal == "Cat")
                     {
                         Cat cat = new Cat(name, age, tokens[2]);
-                        Console.WriteLine(typeAnimal);
-                        Console.WriteLine($"{cat.Name} {cat.Age} {cat.Gender}");
-                        Console.WriteLine(cat.ProduceSound());
+                        animals.Add(cat);
                     }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine(exception.Message);
-                    }
-                }
-                else if (typeAnimal=="Dog")
-                {
-                    try
+                    else if (typeAnimal == "Dog")
                     {
                         Dog dog = new Dog(name, age, tokens[2]);
-                        Console.WriteLine(typeAnimal);
-                        Console.WriteLine($"{dog.Name} {dog.Age} {dog.Gender}");
-                        Console.WriteLine(dog.ProduceSound());
+                        animals.Add(dog);
                     }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine(exception.Message);
-                    }
-                }
-                else if (typeAnimal=="Frog")
-                {
-                    try
+                    else if (typeAnimal == "Frog")
                     {
                         Frog frog = new Frog(name, age, tokens[2]);
-                        Console.WriteLine(typeAnimal);
-                        Console.WriteLine($"{frog.Name} {frog.Age} {frog.Gender}");
-                        Console.WriteLine(frog.ProduceSound());
+                        animals.Add(frog);
                     }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine(exception.Message);
-                    }
-                }
-                else if (typeAnimal=="Kitten")
-                {
-                    try
+                    else if (typeAnimal == "Kitten")
                     {
                         Kitten kitten = new Kitten(name, age);
-                        Console.WriteLine(typeAnimal);
-                        Console.WriteLine($"{kitten.Name} {kitten.Age}");
-                        Console.WriteLine(kitten.ProduceSound());
+                        animals.Add(kitten);
                     }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine(exception.Message);
-                    }
-                }
-                else if (typeAnimal=="TomCat")
-                {
-                    try
+                    else if (typeAnimal == "TomCat")
                     {
                         Tomcat tomCat = new Tomcat(name, age);
-                        Console.WriteLine(typeAnimal);
-                        Console.WriteLine($"{tomCat.Name} {tomCat.Age}");
-                        Console.WriteLine(tomCat.ProduceSound());
-                    }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine(exception.Message);
+                        animals.Add(tomCat);
                     }
                 }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception.Message);
+                }
+            }
+            foreach (Animal animal in animals)
+            {
+                Console.WriteLine(animal);
             }
         }
     }

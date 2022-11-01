@@ -23,5 +23,13 @@ namespace Animals
         {
             return string.Empty;
         }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(this.GetType().Name);
+            sb.AppendLine($"{this.Name} {this.Age} {this.Gender}");
+            sb.AppendLine(this.ProduceSound());
+            return sb.ToString().Trim();
+        }
     }
 }
